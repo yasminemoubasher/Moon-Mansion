@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Moon Mansions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.date {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #475569;
+}
+
+.section {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.btn {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: #e0f2fe;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+}
+
+.modal-box {
+  background: white;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  margin: 5vh auto;
+  border-radius: 14px;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.close {
+  text-align: right;
+  font-size: 22px;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.modal h3 {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-top: 18px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Moon Mansions</h1>
+<div class="date" id="todayDate"></div>
+
+<div class="section" style="text-align:center;">
+  Check the current Moon Mansion here:<br>
+  <a href="https://mooncalendar.astro-seek.com/arabic-moon-mansion-calendar" target="_blank">
+    mooncalendar.astro-seek.com
+  </a>
+</div>
+
+<div class="section">
+  <div class="grid">
+    <div class="btn" onclick="openModal('Al-Sharatain')">Al-Sharatain</div>
+    <div class="btn" onclick="openModal('Al-Butain')">Al-Butain</div>
+    <div class="btn" onclick="openModal('Al-Thurayya')">Al-Thurayya</div>
+    <div class="btn" onclick="openModal('Al-Dabaran')">Al-Dabaran</div>
+    <div class="btn" onclick="openModal('Al-Haqa')">Al-Haqa</div>
+    <div class="btn" onclick="openModal('Al-Hana')">Al-Hana</div>
+    <div class="btn" onclick="openModal('Al-Dhira')">Al-Dhira</div>
+    <div class="btn" onclick="openModal('Al-Nathrah')">Al-Nathrah</div>
+    <div class="btn" onclick="openModal('Al-Tarf')">Al-Tarf</div>
+    <div class="btn" onclick="openModal('Al-Jabhah')">Al-Jabhah</div>
+    <div class="btn" onclick="openModal('Al-Zubrah')">Al-Zubrah</div>
+    <div class="btn" onclick="openModal('Al-Sarfah')">Al-Sarfah</div>
+    <div class="btn" onclick="openModal('Al-Awwa')">Al-Awwa</div>
+    <div class="btn" onclick="openModal('Al-Simak')">Al-Simak</div>
+    <div class="btn" onclick="openModal('Al-Ghafr')">Al-Ghafr</div>
+    <div class="btn" onclick="openModal('Al-Zubana')">Al-Zubana</div>
+    <div class="btn" onclick="openModal('Al-Iklil')">Al-Iklil</div>
+    <div class="btn" onclick="openModal('Al-Qalb')">Al-Qalb</div>
+    <div class="btn" onclick="openModal('Al-Shaulah')">Al-Shaulah</div>
+    <div class="btn" onclick="openModal('Al-Na’am')">Al-Na’am</div>
+    <div class="btn" onclick="openModal('Al-Baldah')">Al-Baldah</div>
+    <div class="btn" onclick="openModal('Sa’d Al-Dhabih')">Sa’d Al-Dhabih</div>
+    <div class="btn" onclick="openModal('Sa’d Bula')">Sa’d Bula</div>
+    <div class="btn" onclick="openModal('Sa’ad Al-Su’ud')">Sa’ad Al-Su’ud</div>
+    <div class="btn" onclick="openModal('Sa’d Al-Akhbiyah')">Sa’d Al-Akhbiyah</div>
+    <div class="btn" onclick="openModal('Al-Fargh Al-Awwal')">Al-Fargh Al-Awwal</div>
+    <div class="btn" onclick="openModal('Al-Fargh Al-Thani')">Al-Fargh Al-Thani</div>
+    <div class="btn" onclick="openModal('Batn Al-Hut')">Batn Al-Hut</div>
+  </div>
+</div>
+
+<div id="modal" class="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="close" onclick="closeModal()">✕</div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+document.getElementById("todayDate").textContent =
+  "Today: " + new Date().toLocaleDateString();
+
+const mansions = {
+  "Al-Sharatain": {
+    essence: ["Movement.", "Change.", "Beginning.", "Burst of energy.", "Use of force."],
+    good: ["Traveling.", "Healing.", "Beginnings.", "Doing business.", "Gardening.", "Taking care of hair and nails."],
+    bad: ["Love and friendship.", "Hiring employees."]
+  },
+  "Al-Butain": {
+    essence: ["Effort.", "Courage.", "Will and energy.", "Conflict."],
+    good: ["Trade and finding treasures.", "Seeking favor from those in a position of authority.", "Sowing seeds.", "Traveling by land.", "Using fire.", "Hunting."],
+    bad: ["Love and friendship.", "Traveling by water.", "Being passive.", "Planting trees."]
+  },
+  "Al-Thurayya": {
+    essence: ["Abundance.", "Prosperity.", "Success.", "Determination.", "Great capacity for work."],
+    good: ["Art and creativity.", "Love.", "Using fire.", "Hunting.", "Work and study.", "Business and commerce.", "Alchemy."],
+    bad: ["Marriage.", "Travel by water.", "Friendship.", "Gardening."]
+  },
+  "Al-Dabaran": {
+    essence: ["Enmity.", "Struggle.", "Conflict.", "Argument.", "Anger.", "Violent passion."],
+    good: ["Work.", "Craftsmanship.", "Trade.", "Defeating enemies.", "Removing obstacles."],
+    bad: ["Marriage.", "Friendship.", "Real estate.", "Building.", "Wells and mines.", "Traveling by sea."]
+  },
+  "Al-Haqa": {
+    essence: ["Essentially benefic.", "Focus on mind and intellect."],
+    good: ["Studies and other intellectual activities.", "Artistic activities.", "Seeking a favour from a superior.", "Traveling, especially by water.", "Return from a journey.", "Washing and cutting hair."],
+    bad: ["Social activities.", "Collective work."]
+  },
+  "Al-Hana": {
+    essence: ["Attraction.", "Opposition."],
+    good: ["Love and friendship.", "Relationships.", "Business.", "Making alliances."],
+    bad: ["Gardening.", "Healing."]
+  },
+  "Al-Dhira": {
+    essence: ["Success.", "Abundance.", "Trust."],
+    good: ["Business and trade.", "Obtaining the favour of superiors.", "Love.", "Friendship.", "Healing.", "Washing and cutting hair."],
+    bad: ["Law and justice."]
+  },
+  "Al-Nathrah": {
+    essence: ["Love.", "Power.", "Victory."],
+    good: ["Love and marriage.", "Family life.", "Friendship.", "Achievement of a goal.", "Travel by land.", "Healing."],
+    bad: ["Hiring employees."]
+  },
+  "Al-Tarf": {
+    essence: ["Disappointment.", "Discord.", "Defence."],
+    good: ["Defending yourself from attacks."],
+    bad: ["Health.", "Travel.", "Love and friendship.", "Gardening."]
+  },
+  "Al-Jabhah": {
+    essence: ["Recovery.", "Benevolence.", "Help against enemies."],
+    good: ["Love and friendship.", "Social activities.", "Studies.", "Health.", "Spirituality.", "Building."],
+    bad: ["Traveling.", "Abuse of drugs and medications."]
+  },
+  "Al-Zubrah": {
+    essence: ["Power.", "Gain.", "Respect."],
+    good: ["Profit and gain.", "Marriage.", "Travel.", "Promotion.", "Making a request to a person in authority.", "Gardening.", "Cutting hair.", "Building.", "Actions that require courage."],
+    bad: ["Health of women."]
+  },
+  "Al-Sarfah": {
+    essence: ["Conflict and confrontation.", "Obstacles.", "Rich harvest."],
+    good: ["Gardening.", "Agriculture.", "Building.", "Sending messages.", "Service and work for others."],
+    bad: ["Marriage.", "Personal relationships.", "Sea journeys."]
+  },
+  "Al-Awwa": {
+    essence: ["Achievement of desire.", "Increase.", "Benevolence."],
+    good: ["Love, especially sexual love.", "Trade and finances.", "Beginning of creative projects.", "Traveling.", "Gardening.", "Healing.", "Building.", "Cutting and washing hair."],
+    bad: ["Overeating."]
+  },
+  "Al-Simak": {
+    essence: ["Movement.", "Improvement.", "Transition."],
+    good: ["Romantic love.", "Friendship.", "Moving house.", "Leaving a job or a relationship.", "Healing.", "Traveling by sea.", "Gardening."],
+    bad: ["Marriage.", "Traveling by land."]
+  },
+  "Al-Ghafr": {
+    essence: ["Prosperity.", "Discord.", "Focus on the material."],
+    good: ["Business.", "Money.", "Wealth.", "Treasure hunting."],
+    bad: ["Love and romantic relationships.", "Family matters.", "Traveling."]
+  },
+  "Al-Zubana": {
+    essence: ["Wealth.", "Prosperity.", "But no love."],
+    good: ["Trade.", "Business.", "Wealth.", "Prosperity."],
+    bad: ["Love.", "Relationships.", "Traveling.", "Healing.", "Gardening."]
+  },
+  "Al-Iklil": {
+    essence: ["Prevented loss.", "Friendship."],
+    good: ["Financial security.", "Friendship.", "Love and marriage.", "Building.", "Promotion.", "Healing.", "Cutting hair."],
+    bad: ["Traveling.", "Risky commercial operations."]
+  },
+  "Al-Qalb": {
+    essence: ["Impending danger.", "Defence."],
+    good: ["Building.", "Farming.", "Treatment of stomach.", "Exposing enemies."],
+    bad: ["Almost anything.", "Family matters.", "Excessive eating.", "Eating unknown food."]
+  },
+  "Al-Shaulah": {
+    essence: ["Battle and besiegement.", "Loss and sadness."],
+    good: ["Farming and gardening.", "Aggressive actions.", "Hunting."],
+    bad: ["Business and commerce.", "Friendship.", "Family matters.", "Traveling by sea."]
+  },
+  "Al-Na’am": {
+    essence: ["Concentrated and controlled energy.", "Passions."],
+    good: ["Traveling by land.", "Collective effort and work.", "Dealing with animals.", "Hunting.", "Building."],
+    bad: ["Marriage.", "Financial matters."]
+  },
+  "Al-Baldah": {
+    essence: ["Enmity.", "Argument.", "Conflict."],
+    good: ["Farming and gardening.", "Building.", "Healing.", "Travel.", "Earnings."],
+    bad: ["Marriage.", "Personal relationships.", "Hiring employees."]
+  },
+  "Sa’d Al-Dhabih": {
+    essence: ["Speed.", "Escape.", "Personal power."],
+    good: ["Healing.", "Traveling.", "Escaping from difficult situations."],
+    bad: ["Marriage.", "Financial matters.", "Trade.", "Hiring employees."]
+  },
+  "Sa’d Bula": {
+    essence: ["Conflict.", "Separation.", "Freedom.", "Healing."],
+    good: ["Healing.", "Divorce.", "Obtaining freedom."],
+    bad: ["Marriage.", "Personal relationships."]
+  },
+  "Sa’ad Al-Su’ud": {
+    essence: ["Nurture.", "Nutrition.", "Fulfilment."],
+    good: ["Starting a new project.", "Love and marriage.", "Increasing income.", "Commerce and finances.", "Building."],
+    bad: ["Those in power.", "Travel by water."]
+  },
+  "Sa’d Al-Akhbiyah": {
+    essence: ["Growth.", "Protection.", "Revenge."],
+    good: ["Farming and gardening.", "Protection of plants and crops.", "Studies and intellectual activities."],
+    bad: ["Friendship.", "Marriage.", "Conception.", "Pregnancy."]
+  },
+  "Al-Fargh Al-Awwal": {
+    essence: ["Love.", "Affection.", "Union."],
+    good: ["Love and marriage.", "Friendship.", "Health and healing.", "Traveling by land.", "Farming and gardening.", "Commerce."],
+    bad: ["Sea journeys.", "Building."]
+  },
+  "Al-Fargh Al-Thani": {
+    essence: ["Income.", "Connection.", "Mischief."],
+    good: ["Business and commerce.", "Healing.", "Farming and gardening."],
+    bad: ["Building.", "Travel by sea.", "Starting a new project."]
+  },
+  "Batn Al-Hut": {
+    essence: ["Guidance.", "Completion.", "Fruition."],
+    good: ["Marriage.", "Business and commerce.", "Farming and gardening.", "Traveling."],
+    bad: ["Health."]
+  }
+};
+
+function openModal(name) {
+  const m = mansions[name];
+  let html = `<h3>${name}</h3>`;
+  if (m) {
+    html += `
+      <div class="section-title">Essence</div>
+      <ul>${m.essence.map(i => `<li>${i}</li>`).join("")}</ul>
+
+      <div class="section-title">Good For</div>
+      <ul>${m.good.map(i => `<li>${i}</li>`).join("")}</ul>
+
+      <div class="section-title">Bad For</div>
+      <ul>${m.bad.map(i => `<li>${i}</li>`).join("")}</ul>
+    `;
+  } else {
+    html += `<p>Content will be added.</p>`;
+  }
+  document.getElementById("modalContent").innerHTML = html;
+  document.getElementById("modal").style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(e) {
+  if (!e || e.target.id === "modal") {
+    document.getElementById("modal").style.display = "none";
+    document.body.style.overflow = "auto";
+  }
+}
+</script>
+</body>
+</html>
